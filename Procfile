@@ -1,0 +1,1 @@
+web: ./frontend npm run start
