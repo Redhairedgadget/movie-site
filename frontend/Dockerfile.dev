@@ -1,0 +1,12 @@
+# This is a file in case you want to use Docker during develoment
+FROM node:alpine
+
+WORKDIR '/app'
+
+# Copy package.json and install dependancies
+COPY package.json ./
+RUN npm install
+# Copy everything else
+COPY .. ./
+
+CMD ["npm", "start"]
