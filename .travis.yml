@@ -2,7 +2,7 @@ sudo: required
 services:
 - docker
 before_install:
-- docker build -t eleroy7/movie-site-frontend -f Dockerfile.dev ./frontend
+- docker build -t eleroy7/movie-site-frontend -f ./frontend/Dockerfile.dev ./frontend
 script:
 - docker run eleroy7/movie-stie-frontend npm run test -- --coverage
 deploy:
