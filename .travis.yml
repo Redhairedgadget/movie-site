@@ -1,0 +1,14 @@
+sudo: required
+services:
+- docker
+before_install:
+- docker build -t eleroy7/movie-site-frontend -f Dockerfile.dev .
+script:
+- docker run eleroy7/movie-stie-frontend npm run test -- --coverage
+deploy:
+  provider: heroku
+  app: movie-site1
+  on:
+    repo: Redhairedgadget/movie-site
+  api_key:
+    secure: FEzpaqRjz6qviUR4LWvE5Jc19gesDXvwYPc/ZEKcBmaV5N2rCAknLu0ZoRSJvekd89dzfr+wVJRVMSS4Bj71uKqRMmmXXiN1PsfJsXPoBPE8JfHzmfHJtgDpMnJ464an+RaKqNvva7I5HKP0K4K+ZXpqgc96a7AfEhrrJdcE3lNXj60VAVzk6dsvtC2kYS4SbwcVD1fvGrtx7Rtx/sK9F0QS3DM9QwtqbrBWhGujBYtP2C5RNk3WyTCHMVem51HwHKUaRVRXlmQuzEb93k7YzMoL/t2JRUftyZBQNI6Te7PddReQKZh2qXlUE55vdIsWgtUBmCZSKMvp++kNM4CTcAmi4Ss+MRa1DvZhOx0ci6RCg3SRG20pRUgjrSBlIQNmeHRsympDocy0Af1p2unax/tvNfxTuHiTEoWcsMVmFKuae+F3B3a2sGM5LvtB0+sVysOzyVzYltQNjDWPggTIJ10NiqCGmfjfwzH0+qra2C73ljbx9flnA/JrsMv/ULnhlqL7Sg74ADToXuEXwFnQFRKwPxTdaAxy1187p21v6EJf08/9UtJB9Vk21dXINyr1to6SHktJjP9jm1l/Ijhe0vmFK+6GbiTTA8Ji+tYp6T5MCLmcxrxBN9ZPyfV9RXnPpbrplBfxbf3BS60RFto3mRoIVx2eDVESHn7RBrTR8Go=
