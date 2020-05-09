@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import List from './components/List/List';
 import Profile from './components/Profile/Profile';
-import Layout from './components/Layout/Layout';
+import Layout from './hoc/Layout/Layout';
 
 class App extends Component {
 
