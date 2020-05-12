@@ -1,6 +1,12 @@
 import React, {useState, useEffect} from 'react';
 
-const auth = () => {
+import Input from '../UI/Input/Input';
+import Button from '../UI/Button/Button';
+import styles from './Auth.module.css';
+import * as actions from '../../store/actions/index';
+import {connect} from 'react-redux';
+
+const auth = (props) => {
     {
         const [signInForm, changeSignInForm] = useState({
             controls: {
@@ -67,14 +73,61 @@ const auth = () => {
             return isValid;
         };
 
-        return(
-            <div>
-                <form action="">
+        const inputChangedHandler = ( event, controlName ) => {
+            const updatedControls = {
+                ...signInForm.controls,
+                [controlName]: {
+                    ...signInForm.controls[controlName],
+                    value: event.target.value,
+                    valid: checkValidity( event.target.value, signInForm.controls[controlName].validation ),
+                    touched: true
+                }
+            };
+            changeSignInForm( { controls: updatedControls } );
+        }
 
+        const submitHandler = (event) => {
+            event.preventDefault();
+            props.onAuth(signInForm.controls.email.value, signInForm.controls.password.value)
+        }
+
+        const formElementArray = [];
+        for(let key in signInForm.controls){
+            formElementArray.push({
+                id: key,
+                config: signInForm.controls[key]
+            })
+        }
+
+        const form = formElementArray.map(formElement => (
+            <Input key={formElement.id}
+                   elementType={formElement.config.elementType}
+                   elementConfig={formElement.config.elementConfig}
+                   value={formElement.config.value}
+                   invalid={!formElement.config.valid}
+                   shouldValidate={formElement.config.validation}
+                   touched={formElement.config.touched}
+                   changed={( event ) => inputChangedHandler( event, formElement.id )}
+            />
+        ))
+
+        return(
+            <div className={styles.Auth}>
+                <form onSubmit={submitHandler} action="">
+                    {form}
+                    <Button btnType="Success">Submit</Button>
+                    <Button btnType="Danger">Switch to sign in</Button>
                 </form>
             </div>
         )
+
     }
 }
 
-export default auth;
+const mapDispatchToProps = dispatch => {
+    return{
+        onAuth: (email, password) => dispatch(actions.auth(email, password))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(auth);
