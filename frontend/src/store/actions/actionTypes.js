@@ -5,3 +5,5 @@ export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 
 export const SET_MOVIES = 'SET_MOVIES';
 export const FETCH_MOVIES_FAILED = 'FETCH_MOVIES_FAILED';
+
+export const SET_OPTION = 'SET_OPTION';

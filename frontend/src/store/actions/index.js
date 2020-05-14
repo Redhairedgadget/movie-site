@@ -6,3 +6,6 @@ export {
 export {
     fetchMovies
 } from './movies';
+export {
+    setOption
+} from './profile';
