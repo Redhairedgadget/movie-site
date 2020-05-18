@@ -9,3 +9,6 @@ export {
 export {
     setOption
 } from './profile';
+export {
+    addRemoveBookmark
+} from './bookmark';

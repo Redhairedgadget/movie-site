@@ -15,7 +15,7 @@ const list = (props) => {
     let list = <Spinner />;
     if(props.movieList){
         list = props.movieList.map(movie => {
-            return <Movie key={movie.id} title={movie.title} poster={movie.poster} link={movie.link}/>
+            return <Movie key={movie.id} movieId={movie.id} title={movie.title} poster={movie.poster} link={movie.link}/>
         })
     }
 

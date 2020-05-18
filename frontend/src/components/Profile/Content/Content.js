@@ -8,7 +8,7 @@ const content = (props) => {
 
     let selectedOptionContent = null;
 
-    if(props.selectedOption == 'settings'){
+    if(props.selectedOption === 'settings'){
         selectedOptionContent = <Settings />;
     }else{
         selectedOptionContent = <List />;
