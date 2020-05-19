@@ -9,7 +9,7 @@ import Spinner from '../UI/Spinner/Spinner';
 const list = (props) => {
 
     useEffect(() => {
-        props.onInitMovies()
+        props.onInitMovies(props.list)
     }, [])
 
     let list = <Spinner />;
@@ -29,13 +29,15 @@ const list = (props) => {
 const mapStateToProps = state => {
     return{
         movieList: state.movieReducer.movies,
-        error: state.movieReducer.error
+        error: state.movieReducer.error,
+        userId: state.authReducer.userId,
+        bookmarks: state.bookmarkReducer.bookmarks
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return{
-        onInitMovies: () => dispatch(actions.fetchMovies())
+        onInitMovies: (list) => dispatch(actions.fetchMovies(list)),
     }
 }
 

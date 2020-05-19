@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import * as actionTypes from './actionTypes';
+import {resolveToLocation} from "react-router-dom/modules/utils/locationUtils";
 
 export const addBookmark = () => {
     return{
@@ -14,29 +15,41 @@ export const removeBookmark = () => {
     }
 }
 
-export const setUserBookmarks = (userId) => {
+export const setUserBookmarks = (bookmarks, bookmarkType) => {
+    return{
+        type: actionTypes.SET_USER_BOOKMARKS,
+        bookmarks,
+        bookmarkType
+    }
+}
+
+export const getUserBookmarks = (userId, bookmarkType) => {
     return dispatch => {
-        axios.get(`https://movie-site-dummy.firebaseio.com/favorites/${userId}.json`)
-            .then(({data}) => {
-                if(data){
-                    localStorage.setItem('userBookmarks', data);
+        axios.get(`https://movie-site-dummy.firebaseio.com/${bookmarkType}/${userId}.json`)
+            .then(response => {
+                if(response.data !== null && typeof response.data.isArray ==='undefined'){
+                    console.log("RECEIVED AN OBJECT")
+                    dispatch(setUserBookmarks(response.data, bookmarkType))
+                }else{
+                    console.log("RECEIVED NULL")
+                    dispatch(setUserBookmarks(response.data, bookmarkType))
                 }
             })
     }
 }
 
-export const addRemoveBookmark = (userId, movieId) => {
+export const addRemoveBookmark = (userId, movieId, bookmarkType) => {
 
     return dispatch => {
         // Getting information about existing favorites of logged in user
-        axios.get(`https://movie-site-dummy.firebaseio.com/favorites/${userId}.json`)
+        axios.get(`https://movie-site-dummy.firebaseio.com/${bookmarkType}/${userId}.json`)
             .then(({data}) => {
                 // Checking if user has any favorites at all
                 if(data){
                     // Checking if user already has selected movie as a favorite
                     if(!data[movieId]){
                         // Push movieId to list and return list if movieId not found
-                        data[movieId]=true;
+                        data[movieId]=movieId;
                         return data
                     }else{
                         // Return movieId if movieId is found
@@ -44,18 +57,18 @@ export const addRemoveBookmark = (userId, movieId) => {
                     }
                 }else{
                     // Create new set (using objects to replicate set) with movieId if user doesn't have any favorites
-                    return {[movieId]: true}
+                    return {[movieId]: movieId}
                 }
             })
             .then(response => {
                 if(typeof response == 'object'){
                     // If array is received, push it as new list
-                    axios.put(`https://movie-site-dummy.firebaseio.com/favorites/${userId}.json`, response);
-                    dispatch(addBookmark());
+                    axios.put(`https://movie-site-dummy.firebaseio.com/${bookmarkType}/${userId}.json`, response)
+                        .then(res => dispatch(getUserBookmarks(userId, bookmarkType)));
                 }else{
                     // If no array, delete movieId from existing list
-                    axios.delete(`https://movie-site-dummy.firebaseio.com/favorites/${userId}/${response}.json`)
-                    dispatch(removeBookmark());
+                    axios.delete(`https://movie-site-dummy.firebaseio.com/${bookmarkType}/${userId}/${response}.json`)
+                        .then(res => dispatch(getUserBookmarks(userId, bookmarkType)));
                 }
             })
     }

@@ -9,11 +9,13 @@ import './index.css';
 import movieReducer from './store/reducers/movies';
 import authReducer from './store/reducers/auth';
 import profileReducer from './store/reducers/profile';
+import bookmarkReducer from './store/reducers/bookmark';
 
 const rootReducer = combineReducers({
     movieReducer,
     authReducer,
-    profileReducer
+    profileReducer,
+    bookmarkReducer
 })
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(rootReducer, composeEnhancers(

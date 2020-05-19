@@ -7,7 +7,7 @@ import * as actions from '../../../store/actions/index';
 const options = (props) =>{
     const [optionList, changeOptionList] = useState([
         {id: 0, option:'settings', title: 'Settings'},
-        {id: 1, option:'bookmark', title: 'Want to see'},
+        {id: 1, option:'favorites', title: 'Want to see'},
         {id: 2, option:'seen', title: 'Seen'}
     ])
 

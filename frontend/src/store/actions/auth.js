@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import * as actionTypes from './actionTypes';
+import * as actions from './index';
 
 export const authStart = () => {
     return {
@@ -82,6 +83,8 @@ export const authCheckState = () => {
                 const userId = localStorage.getItem('userId');
                 dispatch(authSuccess(token, userId));
                 dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime()) / 1000 ));
+                dispatch(actions.getUserBookmarks(userId, 'favorites'));
+                dispatch(actions.getUserBookmarks(userId, 'seen'));
             }
         }
     };

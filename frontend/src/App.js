@@ -29,7 +29,7 @@ class App extends Component {
                 <Switch>
                     <Route path="/profile" component={Profile}/>
                     <Route path="/logout" component={Logout}/>
-                    <Route path="/" component={List}/>
+                    <Route path="/" render={(props) => <List {...props} list='all'/>}/>
                     <Redirect to="/"/>
                 </Switch>
             );
@@ -46,13 +46,14 @@ class App extends Component {
 
 const mapStateToProps = state => {
     return{
-        isAuth: state.authReducer.token !== null
+        isAuth: state.authReducer.token !== null,
+        userId: state.authReducer.userId
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return{
-        onTryAutoSign: () => dispatch(actions.authCheckState())
+        onTryAutoSign: () => dispatch(actions.authCheckState()),
     }
 }
 

@@ -10,5 +10,6 @@ export {
     setOption
 } from './profile';
 export {
-    addRemoveBookmark
+    addRemoveBookmark,
+    getUserBookmarks
 } from './bookmark';

@@ -1,48 +1,42 @@
 import React from 'react';
-import axios from 'axios';
 import {connect} from 'react-redux';
 import Button from '../../UI/Button/Button';
+import * as actions from '../../../store/actions/index';
 
 const movie = (props) => {
 
-     const wantToSeeClickedHandler = () => {
+    const wantToSeeClickedHandler = () => {
+        props.onClickingBookmarkButton(props.userId, props.movieId, 'favorites')
+    }
 
-         // Getting information about existing favorites of logged in user
-        axios.get(`https://movie-site-dummy.firebaseio.com/favorites/${props.userId}.json`)
-            .then(({data}) => {
-                // Checking if user has any favorites at all
-                if(data){
-                    // Checking if user already has selected movie as a favorite
-                    if(!data[props.movieId]){
-                        // Push movieId to list and return list if movieId not found
-                        data[props.movieId]=true;
-                        return data
-                    }else{
-                        // Return movieId if movieId is found
-                        return props.movieId
-                    }
-                }else{
-                    // Create new set (using objects to replicate set) with movieId if user doesn't have any favorites
-                    return {[props.movieId]: true}
-                }
-            })
-            .then(response => {
-                if(typeof response == 'object'){
-                    // If array is received, push it as new list
-                    axios.put(`https://movie-site-dummy.firebaseio.com/favorites/${props.userId}.json`, response)
-                }else{
-                    // If no array, delete movieId from existing list
-                    axios.delete(`https://movie-site-dummy.firebaseio.com/favorites/${props.userId}/${response}.json`)
-                }
-            })
-
+    const seenClickedHanlder = () => {
+        props.onClickingBookmarkButton(props.userId, props.movieId, 'seen')
     }
 
     let buttons = null;
 
     if (props.isAuth){
-        buttons = <Button clicked={wantToSeeClickedHandler}>Want to see</Button>
+        let favoriteButton = null;
+        let seenButton = null;
+
+        if(Boolean(props.favorites)){
+            favoriteButton = <Button clicked={wantToSeeClickedHandler}>{props.movieId.toString() in props.favorites ? "Don't want to see anymore": "Want to see"}</Button>
+        }else{
+            favoriteButton = <Button clicked={wantToSeeClickedHandler}>Want to see</Button>
+        }
+        if(Boolean(props.seen)){
+            seenButton = <Button clicked={seenClickedHanlder}>{props.movieId.toString() in props.seen ? "Haven't seen": "Seen"}</Button>
+        }else{
+            seenButton = <Button clicked={seenClickedHanlder}>Seen</Button>
+        }
+
+        buttons =
+            <div>
+                {favoriteButton}
+                {seenButton}
+            </div>
     }
+
     return(
         <div>
             <h3>{props.title}</h3>
@@ -57,8 +51,16 @@ const movie = (props) => {
 const mapStateToProps = state => {
     return{
         isAuth: state.authReducer.token !== null,
-        userId: state.authReducer.userId
+        userId: state.authReducer.userId,
+        favorites: state.bookmarkReducer.favorites,
+        seen: state.bookmarkReducer.seen
     }
 }
 
-export default connect(mapStateToProps)(movie)
+const mapDispatchToProps = dispatch => {
+    return{
+        onClickingBookmarkButton: (userId, movieId, bookmarkType) => dispatch(actions.addRemoveBookmark(userId, movieId, bookmarkType))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(movie)

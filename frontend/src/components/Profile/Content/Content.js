@@ -11,7 +11,11 @@ const content = (props) => {
     if(props.selectedOption === 'settings'){
         selectedOptionContent = <Settings />;
     }else{
-        selectedOptionContent = <List />;
+        if(props.selectedOption === 'favorites'){
+            selectedOptionContent = <List list='favorites'/>;
+        }else{
+            selectedOptionContent = <List list='seen' />
+        }
     }
 
     return(
