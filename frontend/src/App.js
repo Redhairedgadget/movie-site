@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import {connect} from 'react-redux';
 
-import List from './components/List/List';
+import List from './components/Shared/List/List';
 import Profile from './components/Profile/Profile';
 import Layout from './hoc/Layout/Layout';
 import Auth from './components/Auth/Auth';
@@ -19,7 +19,7 @@ class App extends Component {
         let routes = (
             <Switch>
                 <Route path="/auth" component={Auth}/>
-                <Route path="/" exact component={List}/>
+                <Route path="/" render={(props) => <List {...props} list='all'/>}/>
                 <Redirect to="/"/>
             </Switch>
         );

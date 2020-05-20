@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer';
+import {withRouter} from "react-router-dom";
 import styles from './Layout.module.css';
 
 const layout = (props) => {
@@ -37,4 +38,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(layout)
+export default withRouter(connect(mapStateToProps)(layout))

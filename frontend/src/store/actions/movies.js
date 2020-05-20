@@ -3,7 +3,6 @@ import axios from 'axios';
 import * as actionTypes from './actionTypes';
 
 export const setMovies = (movies) => {
-    console.log(movies);
     return{
         type: actionTypes.SET_MOVIES,
         movies
@@ -16,14 +15,18 @@ export const fetchMoviesFailed = () => {
     }
 }
 
-export const fetchMovies =(list) => {
-    return dispatch => {
+export const fetchMovies =(list, user) => {
+    return (dispatch, getState) => {
         axios.get('https://movie-site-dummy.firebaseio.com/movies.json')
             .then(res=> {
-                if(list === 'all'){
-                    dispatch(setMovies(res.data))
+                if(user){
+                    const ids = getState().bookmarkReducer[list];
+                    dispatch(setMovies(res.data.filter(el => {
+                        return Object.keys(ids).includes(el.id.toString())
+                    })))
                 }else{
-                    dispatch(null)
+                    console.log(user);
+                    dispatch(setMovies(res.data))
                 }
                 // console.log(res.data);
             })

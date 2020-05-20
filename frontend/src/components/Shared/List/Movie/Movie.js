@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import Button from '../../UI/Button/Button';
-import * as actions from '../../../store/actions/index';
+import Button from '../../../UI/Button/Button';
+import * as actions from '../../../../store/actions';
 
 const movie = (props) => {
 

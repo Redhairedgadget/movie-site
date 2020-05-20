@@ -2,15 +2,16 @@ import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
 import styles from './List.module.css';
 
-import * as actions from '../../store/actions/index';
+import * as actions from '../../../store/actions';
 import Movie from './Movie/Movie';
-import Spinner from '../UI/Spinner/Spinner';
+import Spinner from '../../UI/Spinner/Spinner';
 
 const list = (props) => {
 
     useEffect(() => {
-        props.onInitMovies(props.list)
-    }, [])
+        console.log(props.user);
+        props.onInitMovies(props.list, props.user)
+    }, [props.list])
 
     let list = <Spinner />;
     if(props.movieList){
@@ -37,7 +38,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return{
-        onInitMovies: (list) => dispatch(actions.fetchMovies(list)),
+        onInitMovies: (list, user) => dispatch(actions.fetchMovies(list, user)),
     }
 }
 

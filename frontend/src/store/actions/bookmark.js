@@ -28,10 +28,8 @@ export const getUserBookmarks = (userId, bookmarkType) => {
         axios.get(`https://movie-site-dummy.firebaseio.com/${bookmarkType}/${userId}.json`)
             .then(response => {
                 if(response.data !== null && typeof response.data.isArray ==='undefined'){
-                    console.log("RECEIVED AN OBJECT")
                     dispatch(setUserBookmarks(response.data, bookmarkType))
                 }else{
-                    console.log("RECEIVED NULL")
                     dispatch(setUserBookmarks(response.data, bookmarkType))
                 }
             })
