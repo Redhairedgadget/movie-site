@@ -1,7 +1,8 @@
 export {
     auth,
     logout,
-    authCheckState
+    authCheckState,
+    updateUser
 } from './auth';
 export {
     fetchMovies

@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 import * as actionTypes from './actionTypes';
-import {resolveToLocation} from "react-router-dom/modules/utils/locationUtils";
 
 export const addBookmark = () => {
     return{

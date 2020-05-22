@@ -1,4 +1,10 @@
 import React, {useState} from 'react';
+import {connect} from 'react-redux';
+import {withRouter} from "react-router-dom";
+
+import Input from "../../UI/Input/Input";
+import Button from "../../UI/Button/Button";
+import * as actions from '../../../store/actions/index';
 
 const userForm = (props) => {
     const [userForm, changeUserForm] = useState({
@@ -69,7 +75,7 @@ const userForm = (props) => {
             [controlName]: {
                 ...userForm[controlName],
                 value: event.target.value,
-                valid: checkValidity( event.target.value, signInForm[controlName].validation ),
+                valid: checkValidity( event.target.value, userForm[controlName].validation ),
                 touched: true
             }
         };
@@ -78,7 +84,54 @@ const userForm = (props) => {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        /*props.onAuth(signInForm.email.value, signInForm.password.value, isSignup)*/
+        if(props.location.pathname==='/auth'){
+            props.onSubmit(props.location.pathname, userForm.email.value, userForm.password.value, props.isSignup)
+        }else{
+            props.onSubmit(props.location.pathname, userForm.email.value, userForm.password.value)
+        }
+        /*console.log(props.submittedAction)*/
+    }
+
+    const formElementArray = [];
+    for(let key in userForm){
+        formElementArray.push({
+            id: key,
+            config: userForm[key]
+        })
+    }
+
+    let form = formElementArray.map(formElement => (
+        <Input key={formElement.id}
+               elementType={formElement.config.elementType}
+               elementConfig={formElement.config.elementConfig}
+               value={formElement.config.value}
+               invalid={!formElement.config.valid}
+               shouldValidate={formElement.config.validation}
+               touched={formElement.config.touched}
+               changed={( event ) => inputChangedHandler( event, formElement.id )}
+        />
+    ))
+
+    return(
+        <form onSubmit={submitHandler}>
+            {form}
+            <Button btnType="Success">Submit</Button>
+        </form>
+    )
+}
+
+const mapDispatchToProps = dispatch => {
+    return{
+        onSubmit: (pathname, ...args) => {
+            if(pathname==='/auth'){
+                dispatch(actions.auth(...args))
+            }
+            if(pathname==='/profile'){
+                dispatch(actions.updateUser(...args))
+            }
+        }
     }
 }
+
+export default withRouter(connect(null, mapDispatchToProps)(userForm));
 

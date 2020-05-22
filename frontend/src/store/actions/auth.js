@@ -24,6 +24,13 @@ export const authFail = (error) => {
     };
 };
 
+export const updateSuccess = (token) => {
+    return{
+        type: actionTypes.UPDATE_SUCCESS,
+        idToken: token
+    }
+}
+
 export const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('expirationDate');
@@ -89,3 +96,48 @@ export const authCheckState = () => {
         }
     };
 };
+
+const userUpdateRequest = async (dispatch, updateData) => {
+    const url = 'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCp475x1cI7UQHT1ETJBK8xkPx6V5QfuYY'
+
+    axios.post(url, updateData)
+        .then(res=>{
+            const expirationDate = new Date(new Date().getTime() + res.data.expiresIn * 1000);
+            localStorage.setItem('token', res.data.idToken);
+            localStorage.setItem('expirationDate', expirationDate);
+            console.log(res)
+            dispatch(updateSuccess(res.data.idToken));
+        }).catch(err=> dispatch(authFail(err.response.data.error)))
+}
+
+export const updateUser = (email, password) => {
+
+    return dispatch => {
+        let updateData = {
+            returnSecureToken: true
+        }
+
+        if(email && !password){
+            updateData.idToken = localStorage.token;
+            updateData.email = email;
+            userUpdateRequest(dispatch, updateData)
+        }
+        else if(password && !email){
+            updateData.idToken = localStorage.token;
+            updateData.password = password;
+            userUpdateRequest(dispatch, updateData)
+        }else{
+            updateData.idToken = localStorage.token;
+            updateData.email = email;
+            userUpdateRequest(dispatch, updateData).then(res => {
+                updateData = {
+                    idToken: localStorage.token,
+                    password: password,
+                    returnSecureToken: true
+                }
+                userUpdateRequest(dispatch, updateData)
+            }
+            )
+        }
+    }
+}
